@@ -4,7 +4,7 @@ class Main {
 
     public static void main(String[] args) {
 
-        final int TEST = 7;
+        final int TEST = 11;
         String[] testNames = {
             "Serial, Small",
             "Transposed Serial, Small",
@@ -381,6 +381,7 @@ class Main {
 
     private static void printResult(String test, String[] specs, long timing) {
         int numCores = Runtime.getRuntime().availableProcessors();
+        double timeRes = (double)timing;
         print(
             "\n ______________________________________" +
             "\n|----------------RESULT----------------|" +
@@ -388,7 +389,7 @@ class Main {
             "\n|      user: " + String.format("%-26s", specs[0]) + "|" +
             "\n|  L1 cache: " + String.format("%-26s", specs[1]) + "|" +
             "\n|   # cores: " + String.format("%-26d", numCores) + "|" +
-            "\n| time (ns): " + String.format("%-26d", timing)   + "|" +
+            "\n| time (ns): " + String.format("%-26.2e", timeRes)   + "|" +
             "\n\\--------------------------------------/");
     }
 
