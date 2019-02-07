@@ -27,7 +27,7 @@ class Main {
                 "Philippe Nadon", "384KiB"
             },
             {
-                "", ""
+                "Luke Rostad", "250KiB"
             },
             {
                 "", ""
@@ -113,7 +113,7 @@ class Main {
     }
 
     //-----------------------------------------------------
-    //                                       TEST METHODS |
+    //                                    TEST METHODS P1 |
     //-----------------------------------------------------
 
     private static long runSerial(double[][] matr1, double[][] matr2) {
@@ -226,6 +226,10 @@ class Main {
         return endTime - startTime;
     }
 
+    //-----------------------------------------------------
+    //                                    TEST METHODS P2 |
+    //-----------------------------------------------------
+
     private static long runManyThreads(double[][] matr1, double[][] matr2) {
         int height = matr1.length;
         int width = matr2[0].length;
@@ -276,6 +280,10 @@ class Main {
         return endTime - startTime;
     }
 
+    //-----------------------------------------------------
+    //                                      OTHER METHODS |
+    //-----------------------------------------------------
+
     private static double[][] transposeMatrix(double[][] matrix) {
         int height = matrix.length;
         int width = matrix[0].length;
@@ -289,10 +297,6 @@ class Main {
 
         return res;
     }
-
-    //-----------------------------------------------------
-    //                                      OTHER METHODS |
-    //-----------------------------------------------------
 
     private static double[][] makeRandMatrix( int width, int height) {
         double[][] res = new double[width][height];
