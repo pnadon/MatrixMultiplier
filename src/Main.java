@@ -4,7 +4,7 @@ class Main {
 
     public static void main(String[] args) {
 
-        final int TEST = 7;
+        final int TEST = 6;
         String[] testNames = {
             "Serial, Small",
             "Transposed Serial, Small",
@@ -105,7 +105,7 @@ class Main {
                 break;
 
             default:
-                threadTester();
+                //threadTester();
                 return;
         }
 
@@ -239,17 +239,72 @@ class Main {
         long startTime;
         long endTime;
 
+        double[][] matr2T = transposeMatrix(matr2);
+        MatrixThreadCell[] threads  = new MatrixThreadCell[height*width];
+
         startTime = System.nanoTime();
+        for( int i = 0; i < height; i++){
+            for( int j = 0; j < width; j++){
+                threads[i*width + j] = new MatrixThreadCell( matr1[i], matr2T[j]);
+                threads[i*width + j].start();
+            }
+        }
+        try {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    threads[i*width + j].join();
+                    res[i][j] = threads[i*width + j].getRes();
+                }
+            }
+        }
+        catch (InterruptedException e) {
+            print("\nTHREAD ERROR");
+        }
         endTime = System.nanoTime();
+
+        printMatrix(matr1);
+        print("------------ x ------------\n");
+        printMatrix(matr2);
+        print("------------ = ------------\n");
+        printMatrix(res);
 
         return endTime - startTime;
     }
 
     private static long runManyThreadsR(int[] sizes) {
+
+        double[][] matr1 = makeRandMatrix( sizes[0], sizes[1]);
+        double[][] matr2 = makeRandMatrix( sizes[1], sizes[2]);
+
+        int height = matr1.length;
+        int width = matr2[0].length;
+        int innerDim = matr2.length;
+        double[][] res = new double[height][width];
+
         long startTime;
         long endTime;
 
+        double[][] matr2T = transposeMatrix(matr2);
+        MatrixThreadCell[] threads  = new MatrixThreadCell[height*width];
+
         startTime = System.nanoTime();
+        for( int i = 0; i < height; i++){
+            for( int j = 0; j < width; j++){
+                threads[i*width + j] = new MatrixThreadCell( matr1[i], matr2T[j]);
+                threads[i*width + j].start();
+            }
+        }
+        try {
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    threads[i*width + j].join();
+                    res[i][j] = threads[i*width + j].getRes();
+                }
+            }
+        }
+        catch (InterruptedException e) {
+            print("\nTHREAD ERROR");
+        }
         endTime = System.nanoTime();
 
         return endTime - startTime;
@@ -352,14 +407,16 @@ class Main {
         }
     }
 
+    /*
     private static void threadTester() {
         System.out.println("Cores:" +
             Runtime.getRuntime().availableProcessors());
         for (int i = 0; i < 20; i++) {
-            new MatrixThread(i).start();
+            new MatrixThreadCell(i).start();
         }
         System.out.println("Hello from thread main");
     }
+    */
 
     private static void printResult(String test, String[] specs, long timing) {
         int numCores = Runtime.getRuntime().availableProcessors();
