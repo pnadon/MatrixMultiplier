@@ -4,7 +4,7 @@ class Main {
 
     public static void main(String[] args) {
 
-        final int TEST = 2;
+        final int TEST = 7;
         String[] testNames = {
             "Serial, Small",
             "Transposed Serial, Small",
@@ -20,7 +20,7 @@ class Main {
             "Row Threads, Large"
         };
 
-        final int USER = 0;
+        final int USER = 1;
         String[][] specList = {
             //----NAME----------CACHE SIZE
             {
@@ -256,16 +256,44 @@ class Main {
     }
 
     private static long runRowThreads(double[][] matr1, double[][] matr2) {
+        double[][] matr2T = transposeMatrix(matr2);
         int height = matr1.length;
-        int width = matr2[0].length;
-        int innerDim = matr2.length;
+        int width = matr2T[0].length;
+        int innerDim = matr2T.length;
         double[][] res = new double[height][width];
 
         long startTime;
         long endTime;
 
+
+
+        RowThread[] threads = new RowThread[height];
+
         startTime = System.nanoTime();
+
+        for (int i=0; i < height; i++){
+            threads[i] = new RowThread(matr1[i], matr2T);
+            threads[i].start();
+        }
+
+        try {
+            for (int i=0; i < height; i++) {
+                threads[i].join();
+                res[i] = threads[i].getResult();
+            }
+        }
+        catch (InterruptedException e) {
+            // fall through
+        }
+
         endTime = System.nanoTime();
+
+        printMatrix(matr1);
+        print("------------ x ------------\n");
+        printMatrix(matr2);
+        print("------------ = ------------\n");
+        printMatrix(res);
+
 
         return endTime - startTime;
     }
